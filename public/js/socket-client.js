@@ -1,71 +1,47 @@
-//socket del cliente
-const socket=io();  
 
-const mensaje   =document.querySelector('#txtmensaje');
-const btnenviar =document.querySelector('#btnenviar');
-const online    =document.querySelector('#lblonline');
-const offline   =document.querySelector('#lbloffline');
-const txtbody =document.querySelector('#txtbody');
+// Referencias del HTML
+const lblOnline  = document.querySelector('#lblOnline');
+const lblOffline = document.querySelector('#lblOffline');
+const txtMensaje = document.querySelector('#txtMensaje');
+const btnEnviar  = document.querySelector('#btnEnviar');
 
 
-socket.on('connect',()=>{
-
-    offline.style.display='none';
-    online.style.display='';
-    //console.log('conectado desde el cliente');
-
-});
-
-socket.on('disconnect',()=>{
-
-    online.style.display='none';
-    offline.style.display='';
-   // console.log('desconectado desde el cliente');
-});
+const socket = io();
 
 
-socket.on('enviar-mensaje',(respuesta)=>{
-    //console.log(respuesta);
-    const {msg}=respuesta;
-    console.log(msg);
 
-    const node = document.createElement("LI"); 
-    node.style.backgroundColor ='silver';
-   // node.style.color ='white';
-    node.style.borderRadius  ='5px'; 
-    node.style.marginBottom = '5px';
-    const textnode = document.createTextNode(msg);         // Create a text node
-    node.appendChild(textnode);                              // Append the text to <li>
-    txtbody.appendChild(node);
+socket.on('connect', () => {
+    // console.log('Conectado');
+
+    lblOffline.style.display = 'none';
+    lblOnline.style.display  = '';
 
 });
 
-btnenviar.addEventListener('click',()=>{
+socket.on('disconnect', () => {
+    // console.log('Desconectado del servidor');
 
-    const msg=mensaje.value;
+    lblOnline.style.display  = 'none';
+    lblOffline.style.display = '';
+});
 
-   const node = document.createElement("LI");
-    node.style.backgroundColor ='lightblue';
-   // node.style.color ='white';
-   node.style.marginBottom = '5px';
-    node.style.borderRadius  ='5px';
 
-    const textnode = document.createTextNode(msg);         // Create a text node
-    node.appendChild(textnode);                              // Append the text to <li>
-    txtbody.appendChild(node);
+socket.on('enviar-mensaje', (payload) => {
+    console.log( payload )
+})
 
-    const payload={
 
-        msg,
-        id:'12345',
-        fecha:new Date().getTime()
+btnEnviar.addEventListener( 'click', () => {
+
+    const mensaje = txtMensaje.value;
+    const payload = {
+        mensaje,
+        id: '123ABC',
+        fecha: new Date().getTime()
     }
-
-    mensaje.value='';
-    //console.log(msg);
-    socket.emit('enviar-mensaje',payload,(id)=>{
-        console.log('id mensaje',id);
-
+    
+    socket.emit( 'enviar-mensaje', payload, ( id ) => {
+        console.log('Desde el server', id );
     });
 
 });
