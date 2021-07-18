@@ -3,8 +3,6 @@
 const lblNuevoTicket=document.querySelector("#lblNuevoTicket");
 const btnbotn=document.querySelector("button");
 
-console.log('Nuevo Ticket HTML');
-
 
 const socket = io();
 
@@ -29,7 +27,6 @@ socket.on('disconnect', () => {
 
 btnbotn.addEventListener( 'click', () => {
 
-   
     socket.emit( 'siguiente-ticket', null, ( ticket ) => {
        // console.log(ticket );
         lblNuevoTicket.innerHTML=ticket;
